@@ -3,7 +3,9 @@
 # @Author : Miao Shen
 # @File : test.py
 
-__all__ = ['User', 'Model']
+import numpy as np
+
+
 
 class User():
     """
@@ -51,18 +53,3 @@ class Model():
         """
         print(self.name)
 
-
-if __name__ == "__main__":
-    from nn import Unetplusplus
-    import sys
-
-    path = r'E://test.txt'
-    stdout = sys.stdout
-    file = open(path, 'w+')
-    sys.stdout = file
-
-    help(Unetplusplus)
-    file.flush()
-
-    file.close()
-    sys.stdout = stdout
