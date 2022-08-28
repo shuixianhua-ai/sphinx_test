@@ -4,12 +4,12 @@
 # @File : cutimage.py
 
 # from pydde.core.model import BaseProcedureModel
-import numpy as np
-from torchvision import transforms
-from PIL import Image
-import torchvision.transforms.functional as F
-import torch
-import logging
+# import numpy as np
+# from torchvision import transforms
+# from PIL import Image
+# import torchvision.transforms.functional as F
+# import torch
+# import logging
 # from osgeo import gdal
 
 
