@@ -10,7 +10,8 @@ from PIL import Image
 import torchvision.transforms.functional as F
 import torch
 import logging
-# from osgeo import gdal
+from osgeo import gdal
+import torch.nn as nn
 
 
 
