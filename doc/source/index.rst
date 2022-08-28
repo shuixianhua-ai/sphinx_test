@@ -7,7 +7,7 @@ Welcome to demo's documentation!
 ================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    modules
 
