@@ -17,9 +17,7 @@ Make multi-channel data
 ------------------------
 .. automodule:: preprocessing.dataprocess
 .. autoclass:: preprocessing.dataprocess.Dataprocess
-
-    .. autofunction:: preprocessing.dataprocess.Dataprocess.out
-    .. autofunction:: preprocessing.dataprocess.Dataprocess.processTestIm_df
+    :members:
 
 
 

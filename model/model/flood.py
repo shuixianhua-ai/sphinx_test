@@ -4,19 +4,21 @@
 # @File : Flood Inundation Extraction
 
 # from pydde.core.model import BaseProcedureModel
-import numpy as np
-import torch
-import torch.nn as nn
-import rasterio
+# import numpy as np
+# import torch
+# import torch.nn as nn
+# import rasterio
 
 
 
 
 class FloodInundation():
+
     """
     FloodInundation is used to achieve a decision-level data fusion method. The data fusion
     method combines three different UNet++ models trained by Sentinel-1 and Sentinel-2 data,
     which produces more accurate flood inundated areas.
+
     -------------------
     :param data_pre: multi-channel data before disaster.
     :param data_post: multi-channel data before disaster.
@@ -65,6 +67,7 @@ class FloodInundation():
     def extraction(self):
         """
         extract flood inundated areas
+        ---------------------------------
         :return: results of flood inundated areas in size of 512*512
         """
 
@@ -135,6 +138,8 @@ class FloodInundation():
     def data_fusion_s1(self,test_data):
         """
         data fusion method for Sentinel-1
+        ---------------------------------
+
         :param test_data: multi-channel data
         :rtype: numpy array
         :return: result extracted by Sentinel-1 data
@@ -165,10 +170,8 @@ class FloodInundation():
 
         step 3 : extract water in cloud area
 
-        :param test_data: numpy array
-            multi-channel data
-        :return: numpy array
-            result extracted by Sentinel-1 and Sentinel-2 data
+        :param test_data: multi-channel data
+        :return: result extracted by Sentinel-1 and Sentinel-2 data
         """
 
 

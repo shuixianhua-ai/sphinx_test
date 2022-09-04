@@ -12,9 +12,10 @@ from preprocessing.dataprocess import Dataprocess,CutImage
 
 def get_args():
     """
-    .. code-block:: python
-        import numpy
-        # this part can be replaced by certain demo
+        .. code-block:: python
+
+            # this part can be replaced by certain demo
+            import numpy
 
     """
     

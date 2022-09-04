@@ -18,7 +18,7 @@ class CutImage():
     """
     cut image
 
-    -------
+
     :param s1_path: path of Sentinel-1 image.
     :param s2_path: path of Sentinel-2 image.
     :param SIZE: size of Sentinel-1 and Sentinel-2 images
@@ -43,7 +43,7 @@ class CutImage():
         """
         Get the result of image cutting
 
-        --------------------------------
+
         :return: a group of Sentinel-1 and Sentinel-2 images in certain size
         """
 
@@ -68,7 +68,7 @@ def cut(in_file, size,channel):
     """
     cut images
 
-    -------------
+
     :param in_file: path of source image
     :param size: size of image
     :param channel: number of image's channel
@@ -127,7 +127,7 @@ class Dataprocess():
     """
     make multi-channel data
 
-    ---------------------------
+ 
     :param data: the array of input data
     :param use_s2: whether to use Sentinel-2 images
     :type data: numpy array
@@ -165,6 +165,8 @@ class Dataprocess():
     def out(self):
         """
         output multi-channel data
+
+
         :return: multi-channel data
         :rtype: numpy array
         """

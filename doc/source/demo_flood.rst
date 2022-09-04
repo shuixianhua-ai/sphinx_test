@@ -1,4 +1,4 @@
 demo
 ==================
 
-.. autofunction:: test.demo_flood.get_args
+.. autofunction:: demo_flood.get_args
