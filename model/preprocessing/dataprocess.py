@@ -4,12 +4,12 @@
 # @File : cutimage.py
 
 
-import numpy as np
-from torchvision import transforms
-from PIL import Image
-import torchvision.transforms.functional as F
-import torch
-import logging
+# import numpy as np
+# from torchvision import transforms
+# from PIL import Image
+# import torchvision.transforms.functional as F
+# import torch
+# import logging
 # from osgeo import gdal
 
 
@@ -127,7 +127,7 @@ class Dataprocess():
     """
     make multi-channel data
 
- 
+
     :param data: the array of input data
     :param use_s2: whether to use Sentinel-2 images
     :type data: numpy array

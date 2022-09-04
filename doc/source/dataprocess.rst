@@ -15,7 +15,6 @@ Cut Image
 
 Make multi-channel data
 ------------------------
-.. automodule:: preprocessing.dataprocess
 .. autoclass:: preprocessing.dataprocess.Dataprocess
     :members:
 
