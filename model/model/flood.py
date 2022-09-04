@@ -17,29 +17,32 @@ class FloodInundation():
     FloodInundation is used to achieve a decision-level data fusion method. The data fusion
     method combines three different UNet++ models trained by Sentinel-1 and Sentinel-2 data,
     which produces more accurate flood inundated areas.
+    -------------------
+    :param data_pre: multi-channel data before disaster.
+    :param data_post: multi-channel data before disaster.
+    :param use_s2: If FALSE, the method will extract flood inundated areas only by Sentinel-1 images.If
+                TRUE, the method will fuse Sentinel-1 and Sentinel-2 images by decision-level data
+                fusion method.
+    :param k1: The first threshold for decision-level data fusion method. In the first step of
+                the decision-level data fusion method, the model good at removing non-water areas
+                is used to calculate the probability of each pixel classified as water. The pixels
+                with lower than k1 is defined as non-water.
+    :param k2: The second threshold for decision-level data fusion method. In the second step of
+                the decision-level data fusion method, the model good at distinguish water in cloud-free
+                area is used to calculate the probability of each pixel classified as water. The pixels
+                with higher than k2 is defined as water.
+    :param k3: The third threshold for decision-level data fusion method. In the third step of
+                the decision-level data fusion method, the model good at distinguish water in cloud
+                area is used to extract flood inundation areas.
+    :param output: path of output image
+    :param image_path: path of original image(use to get profile)
+    :param size: size of images
 
-    Parameters
-    --------------
-    use_s2: bool, default=FALSE
-        If FALSE, the method will extract flood inundated areas only by Sentinel-1 images.If
-        TRUE, the method will fuse Sentinel-1 and Sentinel-2 images by decision-level data
-        fusion method.
-
-    k1: float, default=0.4
-        The first threshold for decision-level data fusion method. In the first step of
-        the decision-level data fusion method, the model good at removing non-water areas
-        is used to calculate the probability of each pixel classified as water. The pixels
-        with lower than k1 is defined as non-water.
-
-    k2: float, default=0.95
-        The second threshold for decision-level data fusion method. In the second step of
-        the decision-level data fusion method, the model good at removing non-water areas
-        is used to calculate the probability of each pixel classified as water. The pixels
-        with lower than k1 is defined as non-water.
     """
 
 
     def __init__(self, data_pre, data_post, use_s2, k1, k2, k3,output,image_path,size=512):
+
         super().__init__()
         image = rasterio.open(image_path)
         self.data_pre = data_pre
@@ -61,9 +64,10 @@ class FloodInundation():
 
     def extraction(self):
         """
-        extract flood inundated areas in size of 512*512
-        :return:
+        extract flood inundated areas
+        :return: results of flood inundated areas in size of 512*512
         """
+
 
         img = []
 
@@ -99,9 +103,9 @@ class FloodInundation():
     def out(self,img):
         """
         output the flood inundation map in study area
-        :param img:
-        :return:
+
         """
+
         x = int(np.ceil(self.height / self.size)) - 1
         y = int(np.ceil(self.width / self.size)) - 1
         out = np.zeros(shape=(1, self.height, self.width), dtype=np.uint8)
@@ -131,9 +135,11 @@ class FloodInundation():
     def data_fusion_s1(self,test_data):
         """
         data fusion method for Sentinel-1
-        :param test_data:
-        :return:
+        :param test_data: multi-channel data
+        :rtype: numpy array
+        :return: result extracted by Sentinel-1 data
         """
+
         images_s1 = test_data
 
         model_s1 = self.model_s1.eval()
@@ -152,9 +158,19 @@ class FloodInundation():
     def data_fusion(self,test_data):
         """
         decision-level data fusion method for combining  Sentinel-1 and Sentinel-2
-        :param test_data:
-        :return:
+
+        step 1 : remove non-water
+
+        step 2 : extract water in non-cloud area
+
+        step 3 : extract water in cloud area
+
+        :param test_data: numpy array
+            multi-channel data
+        :return: numpy array
+            result extracted by Sentinel-1 and Sentinel-2 data
         """
+
 
         model_s1 = self.model_s1.eval()
         model_s1 = model_s1.cuda()
@@ -199,7 +215,6 @@ class FloodInundation():
         outputs_1 = torch.where(outputs_1 >= 2, outputs_3, outputs_1)
 
         return outputs_1
-
 
 
 

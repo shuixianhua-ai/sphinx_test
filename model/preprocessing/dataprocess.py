@@ -3,31 +3,35 @@
 # @Author : Miao Shen
 # @File : cutimage.py
 
-# from pydde.core.model import BaseProcedureModel
+
 import numpy as np
 from torchvision import transforms
 from PIL import Image
 import torchvision.transforms.functional as F
 import torch
 import logging
-from osgeo import gdal
-import torch.nn as nn
-
+# from osgeo import gdal
 
 
 class CutImage():
+
     """
     cut image
+
+    -------
+    :param s1_path: path of Sentinel-1 image.
+    :param s2_path: path of Sentinel-2 image.
+    :param SIZE: size of Sentinel-1 and Sentinel-2 images
+
+            .. note:: To improve the efficient of extraction, the original Sentinel-1 images and Sentinel-2 images will be cut into 512 pixels * 512 pixels.
+    :param s1_CHANNEL: number of Sentinel-1 channels
+    :param s2_CHANNEL: number of Sentinel-2 channels
+    :type s1_path: str
+    :type s2_path: str
     """
 
     def __init__(self, s1_path, s2_path, SIZE=512,s1_CHANNEL=2,s2_CHANNEL=14):
-        """
-        :param s1_path:
-        :param s2_path:
-        :param SIZE:
-        :param s1_CHANNEL:
-        :param s2_CHANNEL:
-        """
+
         super().__init__()
         self.s1_path = s1_path
         self.s2_path = s2_path
@@ -37,13 +41,17 @@ class CutImage():
 
     def run(self):
         """
-        cut Sentinel-1 and Sentienl-2 images
-        :return:
+        Get the result of image cutting
+
+        --------------------------------
+        :return: a group of Sentinel-1 and Sentinel-2 images in certain size
         """
+
+
         logging.info('cut images')
 
-        s1 = self.cut(self.s1_path,self.s1_channel)
-        s2 = self.cut(self.s2_path, self.s2_channel)
+        s1 = cut(self.s1_path,self.size,self.s1_channel)
+        s2 = cut(self.s2_path, self.size,self.s2_channel)
 
         flood_data = []
         for i in range(0, len(s1)):
@@ -56,71 +64,81 @@ class CutImage():
         logging.info('cut images finish')
         return flood_data
 
-    def cut(self,in_file, channel):
-        """
-        cut image
-        :param in_file:
-        :param channel:
-        :return:
-        """
+def cut(in_file, size,channel):
+    """
+    cut images
 
-        data = []
-        image = gdal.Open(in_file).ReadAsArray()
-
-        cut_factor_row = int(np.ceil(image.shape[1] / self.size))  # 0
-        cut_factor_clo = int(np.ceil(image.shape[2] / self.size))  # 1
-
-        temp = np.zeros((channel, self.size, self.size), dtype=float)
-        temp_image = np.zeros_like(temp)
-        num = 0
-
-        for i in range(cut_factor_row):
-            for j in range(cut_factor_clo):
-                start_x = 0
-                end_x = 0
-                start_y = 0
-                end_y = 0
-                if i == cut_factor_row - 1:
-                    start_x = int(np.rint(i * self.size))
-                    end_x = image.shape[1]
-
-                else:
-                    start_x = int(np.rint(i * self.size))
-                    end_x = int(np.rint((i + 1) * self.size))
-
-                if j == cut_factor_clo - 1:
-                    start_y = int(np.rint(j * self.size))
-                    end_y = image.shape[2]
-
-                else:
-                    start_y = int(np.rint(j * self.size))
-                    end_y = int(np.rint((j + 1) * self.size))
-
-                temp_image[:, 0:(end_x - start_x), 0:(end_y - start_y)] = image[:, start_x:end_x, start_y:end_y]
+    -------------
+    :param in_file: path of source image
+    :param size: size of image
+    :param channel: number of image's channel
+    :return: a group of images in certain size
+    :rtype: list
+    """
 
 
-                for k in range(0, len(temp_image)):
-                    s21, s22 = np.where(temp_image[k] < 0)
-                    # print(s21)
-                    for m in range(0, len(s21)):
-                        temp_image[k][s21[m]][s22[m]] = 0
-                data.append(temp_image)
+    data = []
+    image = gdal.Open(in_file).ReadAsArray()
 
-        return data
+    cut_factor_row = int(np.ceil(image.shape[1] / size))  # 0
+    cut_factor_clo = int(np.ceil(image.shape[2] / size))  # 1
+
+    temp = np.zeros((channel, size, size), dtype=float)
+    temp_image = np.zeros_like(temp)
+    num = 0
+
+    for i in range(cut_factor_row):
+        for j in range(cut_factor_clo):
+            start_x = 0
+            end_x = 0
+            start_y = 0
+            end_y = 0
+            if i == cut_factor_row - 1:
+                start_x = int(np.rint(i * size))
+                end_x = image.shape[1]
+
+            else:
+                start_x = int(np.rint(i * size))
+                end_x = int(np.rint((i + 1) * size))
+
+            if j == cut_factor_clo - 1:
+                start_y = int(np.rint(j * size))
+                end_y = image.shape[2]
+
+            else:
+                start_y = int(np.rint(j * size))
+                end_y = int(np.rint((j + 1) * size))
+
+            temp_image[:, 0:(end_x - start_x), 0:(end_y - start_y)] = image[:, start_x:end_x, start_y:end_y]
+
+            # 本地测试出现影像边缘异常，需要进行替换
+            for k in range(0, len(temp_image)):
+                s21, s22 = np.where(temp_image[k] < 0)
+                # print(s21)
+                for m in range(0, len(s21)):
+                    temp_image[k][s21[m]][s22[m]] = 0
+            data.append(temp_image)
+
+    return data
 
 
 
 class Dataprocess():
     """
-    make multi-channel data 
+    make multi-channel data
+
+    ---------------------------
+    :param data: the array of input data
+    :param use_s2: whether to use Sentinel-2 images
+    :type data: numpy array
     """
 
     def __init__(self, data,use_s2):
         """
 
-        :param data:
-        :param use_s2:
+
         """
+
         super().__init__()
         self.data = data
         self.use_s2 = use_s2
@@ -146,9 +164,11 @@ class Dataprocess():
 
     def out(self):
         """
-
-        :return: different multi-channel data
+        output multi-channel data
+        :return: multi-channel data
+        :rtype: numpy array
         """
+
         data_s1 = self.processTestIm_s1()
         if self.use_s2 == True:
             data_band12= self.processTestIm_s1()
@@ -161,7 +181,10 @@ class Dataprocess():
         return flood_data
 
     def processTestIm_df(self):
+        """
+        make multi-channel data with Sentinel-1 bands, Sentinel-2 bands and water indices
 
+                """
         norm = transforms.Normalize([0.6851,
                                      0.5235,
                                      self.nor[0][0],
@@ -259,6 +282,9 @@ class Dataprocess():
         return ims
 
     def processTestIm_s1(self):
+        """
+        make multi-channel data with Sentinel-1 bands
+        """
         norm = transforms.Normalize([0.6851, 0.5235], [0.0820, 0.1102])
         (sen1, sen2) = self.data
         im = sen1.copy()
@@ -282,6 +308,9 @@ class Dataprocess():
         return ims
 
     def processTestIm_band12(self):
+        """
+                make multi-channel data with Sentinel-1 bands and Band12 from Sentinel-2
+                """
         (sen1, sen2) = self.data
         s1, s2 = sen1.copy(), sen2.copy()
         norm = transforms.Normalize([0.6851, 0.5235, self.nor[12][0]], [0.0820, 0.1102, self.nor[12][1]])
@@ -307,6 +336,7 @@ class Dataprocess():
         ims = torch.stack(ims)
 
         return ims
+
 
 
 

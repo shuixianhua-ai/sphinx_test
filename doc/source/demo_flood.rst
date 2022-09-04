@@ -1,7 +1,4 @@
-demo\_flood module
+demo
 ==================
 
-.. automodule:: demo_flood
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. autofunction:: test.demo_flood.get_args

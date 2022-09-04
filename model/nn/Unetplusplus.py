@@ -1,5 +1,5 @@
 import torch
-# import torchvision.models as models
+import torchvision.models as models
 import torch.nn as nn
 
 
@@ -10,12 +10,6 @@ class VGGBlock(nn.Module):
     basic block
     """
     def __init__(self, in_channels, middle_channels, out_channels):
-        """
-
-        :param in_channels:
-        :param middle_channels:
-        :param out_channels:
-        """
         super().__init__()
         self.relu = nn.ReLU(inplace=True)
         self.conv1 = nn.Conv2d(in_channels, middle_channels, 3, padding=1)
@@ -24,11 +18,7 @@ class VGGBlock(nn.Module):
         self.bn2 = nn.BatchNorm2d(out_channels)
 
     def forward(self, x):
-        """
 
-        :param x:
-        :return:
-        """
         out = self.conv1(x)
         out = self.bn1(out)
         out = self.relu(out)
@@ -47,11 +37,16 @@ class NestedUNet(nn.Module):
     def __init__(self, num_classes, input_channels=3, deep_supervision=False, **kwargs):
         """
 
-        :param num_classes:
-        :param input_channels:
-        :param deep_supervision:
+        :param num_classes: int
+            number of classes
+        :param input_channels: int
+             number of images' channel
+        :param deep_supervision: boolean
+            If use deep_supervision, the network will choose the depth when the result is best.
         :param kwargs:
         """
+        
+
         super().__init__()
 
         nb_filter = [32, 64, 128, 256, 512]
@@ -135,6 +130,19 @@ class NestedUNet(nn.Module):
             return output
 
 
-
+# if __name__ == "__main__":
+#     import test
+#     import sys
+#
+#     path2 = r'E://test.txt'
+#     stdout = sys.stdout
+#     file2 = open(path2, 'w+')
+#     sys.stdout = file2
+#
+#     help(test)
+#     file2.flush()
+#
+#     file2.close()
+#     sys.stdout = stdout
 
 

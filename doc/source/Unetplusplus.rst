@@ -2,6 +2,6 @@ Unetplusplus module
 ===================
 
 .. automodule:: nn.Unetplusplus
-    :members:
+    :members:nn.Unetplusplus.VGGBlock
     :undoc-members:
     :show-inheritance:

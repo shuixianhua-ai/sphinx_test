@@ -5,6 +5,6 @@ project
    :maxdepth: 4
 
    model
-   test
    nn
    preprocessing
+   demo_flood

@@ -11,6 +11,13 @@ from preprocessing.dataprocess import Dataprocess,CutImage
 
 
 def get_args():
+    """
+    .. code-block:: python
+        import numpy
+        # this part can be replaced by certain demo
+
+    """
+    
 
     parse = argparse.ArgumentParser(description="flood inundation extraction",
                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
