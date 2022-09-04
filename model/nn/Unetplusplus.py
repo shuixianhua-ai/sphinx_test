@@ -30,7 +30,7 @@ class VGGBlock():
         return out
 
 
-class NestedUNet(nn.Module):
+class NestedUNet():
     """
     UNet++ architecture
     """
