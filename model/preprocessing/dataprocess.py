@@ -183,10 +183,7 @@ class Dataprocess():
         return flood_data
 
     def processTestIm_df(self):
-        """
-        make multi-channel data with Sentinel-1 bands, Sentinel-2 bands and water indices
 
-                """
         norm = transforms.Normalize([0.6851,
                                      0.5235,
                                      self.nor[0][0],
